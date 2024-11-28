@@ -1,4 +1,5 @@
 const TweetModel = require("../models/tweet_model");
+const UserModel = require("../models/user_model");
 
 // --------------^^^^^^^^^^^^------------------------------- Modules
 
@@ -41,11 +42,13 @@ async function handleUpdateTweet(req, res) {
 
 async function handleCreateNewTweet(req, res) {
   const incomingTweet = req.body;
+
   const newTweet = await TweetModel.create({
     content: incomingTweet.content,
-    author: incomingTweet.author, //Should  Mongoose  obj
     contentInfo: incomingTweet.contentInfo,
+    author: req.user._id,
   });
+
   res.status(201).json(newTweet);
 }
 

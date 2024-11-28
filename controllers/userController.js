@@ -55,47 +55,9 @@ async function handleDeleteUserById(req, res) {
     .json({ message: "Delete Success", delUserData: deletedUser });
 }
 
-async function handleCreateNewUser(req, res) {
-  const newUser = req.body;
-
-  if (
-    !newUser ||
-    !newUser.userName ||
-    !newUser.email ||
-    !newUser.password ||
-    !newUser.dateOfBirth
-  ) {
-    return res.status(400).json({ message: "All Fields Required" });
-  }
-
-  // console.log(newUser.userName);
-
-  try {
-    const response = await UserModel.create({
-      userName: newUser.userName,
-      email: newUser.email,
-      password: newUser.password,
-      dateOfBirth: newUser.dateOfBirth,
-    });
-
-    return res
-      .status(201)
-      .json({ message: "Create Successfully", createdData: response });
-  } catch (error) {
-    if (error.code === 11000) {
-      res.status(403).json(error);
-    } else {
-      return res.status(500).json({
-        message: "An unexpected error occurred. Please try again later.",
-      });
-    }
-  }
-}
-
 module.exports = {
   handleGetAllUser,
   handleGetUserById,
   handleUpdateUserById,
   handleDeleteUserById,
-  handleCreateNewUser,
 };
