@@ -1,5 +1,4 @@
 const { setUser } = require("../services/authService");
-const { v4: uuidv4 } = require("uuid");
 const UserModel = require("../models/user_model");
 
 async function handleUserSignin(req, res) {
@@ -10,9 +9,9 @@ async function handleUserSignin(req, res) {
     if (!user) {
       return res.status(401).json({ message: "Invalid Email or Password" });
     }
-    const sessionId = uuidv4();
-    setUser(sessionId, user);
-    res.cookie("uid", sessionId, {
+
+    const tokeJwt = setUser(user);
+    res.cookie("uid", tokeJwt, {
       httpOnly: true, // Prevent client-side access to cookies for security
       secure: process.env.NODE_ENV === "production", // HTTPS only in production
       sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Cross-origin behavior
