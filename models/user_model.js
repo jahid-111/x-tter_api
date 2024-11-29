@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
 
+const {
+  hashedUserPassword,
+  matchUserSaltHashPass,
+} = require("../middlewares/passwordHashMongo");
+
 const userSchema = new mongoose.Schema(
   {
     userName: {
@@ -10,6 +15,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       unique: true,
       required: true,
+    },
+    salt: {
+      type: String,
     },
     password: {
       type: String,
@@ -31,6 +39,7 @@ const userSchema = new mongoose.Schema(
     },
     profileImage: {
       type: String,
+      default: "/images/defaultUserAvatar.png",
     },
     tweet: [
       {
@@ -56,6 +65,11 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+//Mongoose-----------------------------------|-Middlewares-|
+userSchema.pre("save", hashedUserPassword);
+
+userSchema.static("mathPassword", matchUserSaltHashPass);
 
 const UserModel = mongoose.model.xusers || mongoose.model("xusers", userSchema);
 
