@@ -49,7 +49,18 @@ async function handleCreateNewTweet(req, res) {
     author: req.user._id,
   });
 
-  res.status(201).json(newTweet);
+  await UserModel.findByIdAndUpdate(
+    req.user._id,
+    { $push: { tweet: newTweet._id } },
+    { new: true }
+  );
+
+  const returnUserTweet = await UserModel.findById(req.user._id).populate(
+    "tweet"
+  );
+  const latestTweet = returnUserTweet?.tweet[returnUserTweet?.tweet.length - 1];
+  // console.log(returnUserTweet);
+  res.status(201).json({ latestTweet });
 }
 
 async function handleDeleteTweetById(req, res) {

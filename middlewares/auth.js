@@ -5,9 +5,7 @@ async function restrictToLoggedUserOnly(req, res, next) {
   //   console.log("🍪🍪🍪", userUid);
   if (!userUid) {
     // console.log("🍪✖️ Not    Found", userUid);
-    return res
-      .status(401)
-      .json({ message: "Unauthorized: No UID Cookie Found", userUid });
+    return res.status(401).json({ message: "Please Login First" });
   }
 
   try {

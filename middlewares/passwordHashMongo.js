@@ -20,7 +20,7 @@ async function matchUserSaltHashPass(email, password) {
   try {
     const user = await this.findOne({ email }).lean();
     if (!user) {
-      return new Error("User Not Found");
+      throw new Error("User not found");
     }
     const { salt, password: hashedPassword } = user;
 
