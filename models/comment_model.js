@@ -6,14 +6,17 @@ const CommentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    user: {
+    author: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "xusers",
       required: true,
+    },
+    attachment: {
+      type: String,
     },
     tweet: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Tweet",
+      ref: "tweets",
       required: true,
     },
     parentComment: {

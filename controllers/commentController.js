@@ -1,4 +1,8 @@
 const CommentModel = require("../models/comment_model");
+const TweetModel = require("../models/tweet_model");
+
+// --------------^^^^^^^^^^^^------------------------------- Modules
+
 async function handleGetAllComment(req, res) {
   try {
     const allComment = await CommentModel.find({});
@@ -10,10 +14,69 @@ async function handleGetAllComment(req, res) {
 }
 
 async function handlePostComment(req, res) {
-  const commentBody = req.body;
-  console.log(commentBody);
-  // error posting
-  return res.status(200).json(commentBody);
+  try {
+    const incomingComment = req.body;
+    const userId = req.user._id;
+
+    if (!incomingComment.content) {
+      return res.status(400).json({ error: "Comment content is required." });
+    }
+
+    const newComment = {
+      author: userId,
+      content: incomingComment.content,
+      tweet: incomingComment.tweetId,
+      attachment: incomingComment?.attachment,
+    };
+    const addComment = await CommentModel.create(newComment);
+
+    // Update the tweet with the new comment ID
+    const updatedTweet = await TweetModel.findByIdAndUpdate(
+      incomingComment.tweetId,
+      { $push: { comments: addComment._id } },
+      { new: true }
+    );
+
+    if (!updatedTweet) {
+      return res.status(404).json({ error: "Tweet not found." });
+    }
+
+    const returnUserComment = await TweetModel.findById(
+      incomingComment.tweetId
+    ).populate("comments");
+
+    // Get the latest comment
+    const latestComment =
+      returnUserComment?.comments[returnUserComment?.comments.length - 1];
+
+    return res.status(201).json({ latestComment });
+  } catch (error) {
+    console.error("Error posting comment:", error);
+    return res.status(500).json({ error: "Failed to post comment." });
+  }
 }
 
-module.exports = { handleGetAllComment, handlePostComment };
+async function handleDeleteCommentById(req, res) {
+  const commentId = req.params?.id;
+  // console.log(commentId);
+
+  try {
+    const deleteComment = await CommentModel.findByIdAndDelete(commentId);
+
+    if (!deleteComment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    // console.log("💖💖 Comment deleted successfully");
+    return res.status(200).json({ message: "Delete Success" });
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    return res.status(500).json({ message: "Failed to delete comment" });
+  }
+}
+
+module.exports = {
+  handleGetAllComment,
+  handlePostComment,
+  handleDeleteCommentById,
+};

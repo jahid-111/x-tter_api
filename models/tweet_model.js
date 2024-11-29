@@ -4,7 +4,7 @@ const TweetSchema = new mongoose.Schema(
   {
     content: { type: String, require: true },
     author: { type: mongoose.Schema.Types.ObjectId, ref: "xuser" },
-    comment: [{ type: mongoose.Types.ObjectId, ref: "comment" }],
+    comments: [{ type: mongoose.Types.ObjectId, ref: "comment" }],
     likes: [{ type: mongoose.Types.ObjectId, ref: "xusers" }],
     retweets: [{ type: mongoose.Types.ObjectId, ref: "xusers" }],
     media: [{ type: String }], //ref indeed
