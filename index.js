@@ -1,5 +1,6 @@
 const express = require("express");
 
+const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const dbConnect = require("./services/dbConnectMongo");
 
@@ -19,6 +20,14 @@ const app = express();
 const port = 8000;
 
 dbConnect();
+
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(cookieParser());
 app.use(express.json());

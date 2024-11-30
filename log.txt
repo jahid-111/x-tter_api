@@ -948,3 +948,10 @@
 ➡️ GET Request at : 1732923478255 this path /api/tweet 
 ➡️ GET Request at : 1732923491065 this path /api/comment 
 ➡️ GET Request at : 1732924174124 this path /api/comment 
+➡️ GET Request at : 1732926728054 this path /api/auth 
+➡️ GET Request at : 1732926741560 this path /api/auth 
+➡️ GET Request at : 1732926949109 this path /api/auth 
+➡️ GET Request at : 1732927036781 this path /api/auth 
+➡️ GET Request at : 1732927055414 this path /api/auth 
+➡️ GET Request at : 1732927156114 this path /api/auth 
+➡️ GET Request at : 1732927159342 this path /api/user 
