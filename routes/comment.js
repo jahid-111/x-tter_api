@@ -10,12 +10,12 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(handleGetAllComment).post(handlePostComment);
+router.route("/").get(handleGetAllComment).post(handlePostComment); //Root
 
-router.route("/:id").delete(handleDeleteCommentById);
+router.route("/:id").delete(handleDeleteCommentById); //SINGLE Comment Delete
 
-router.route("/:id/like", handleLikeCommentById);
+router.route("/:id/like", handleLikeCommentById); //LIKE Single Comment
 
-router.route("/:id/comment").post(handlePostComment);
+router.route("/:id/comment").post(handlePostComment); //ref : TweetModel
 
 module.exports = router;

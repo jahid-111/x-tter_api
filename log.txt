@@ -1205,3 +1205,15 @@
 ➡️ POST Request at : 1733003016616 this path /api/comment/674a3f3556fb0cea899d44c0/comment 
 ➡️ POST Request at : 1733003137805 this path /api/comment/674a3f3556fb0cea899d44c0/comment 
 ➡️ POST Request at : 1733003199751 this path /api/comment/674a3f3556fb0cea899d44c0/comment 
+➡️ GET Request at : 1733003432844 this path /api/tweet 
+➡️ GET Request at : 1733003491881 this path /api/tweet/[tweetid] 
+➡️ GET Request at : 1733003565669 this path /api/tweet 
+➡️ GET Request at : 1733003569733 this path /api/tweet 
+➡️ GET Request at : 1733003582760 this path /api/tweet/674a3f3556fb0cea899d44c0 
+➡️ GET Request at : 1733003597516 this path /api/tweet/[tweetid] 
+➡️ GET Request at : 1733003899929 this path /api/tweet/[tweetid] 
+➡️ GET Request at : 1733004502340 this path /api/tweet/[tweetid] 
+➡️ GET Request at : 1733004609068 this path /api/tweet/[tweetid] 
+➡️ GET Request at : 1733005018081 this path /api/tweet/[tweetid] 
+➡️ GET Request at : 1733005124729 this path /api/tweet/[tweetid] 
+➡️ GET Request at : 1733005168996 this path /api/tweet/[tweetid] 

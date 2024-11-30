@@ -10,12 +10,12 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(handleGetAllUser);
+router.route("/").get(handleGetAllUser); //Root
 
 router
-  .route("/:id")
-  .get(handleGetUserById)
-  .patch(handleUpdateUserById)
-  .delete(handleDeleteUserById);
+  .route("/:id") //SINGLE CONTROL
+  .get(handleGetUserById) //SINGLE User
+  .patch(handleUpdateUserById) //USER Update
+  .delete(handleDeleteUserById); //DELETE User
 
 module.exports = router;
