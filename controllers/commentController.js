@@ -17,6 +17,10 @@ async function handlePostComment(req, res) {
   try {
     const incomingComment = req.body;
     const userId = req.user._id;
+    const tweetId = req.params.id;
+
+    // console.log(incomingComment);
+    // console.log(userId);
 
     if (!incomingComment.content) {
       return res.status(400).json({ error: "Comment content is required." });
@@ -25,14 +29,14 @@ async function handlePostComment(req, res) {
     const newComment = {
       author: userId,
       content: incomingComment.content,
-      tweet: incomingComment.tweetId,
+      tweet: tweetId,
       attachment: incomingComment?.attachment,
     };
     const addComment = await CommentModel.create(newComment);
 
     // Update the tweet with the new comment ID
     const updatedTweet = await TweetModel.findByIdAndUpdate(
-      incomingComment.tweetId,
+      tweetId,
       { $push: { comments: addComment._id } },
       { new: true }
     );
@@ -41,10 +45,10 @@ async function handlePostComment(req, res) {
       return res.status(404).json({ error: "Tweet not found." });
     }
 
-    const returnUserComment = await TweetModel.findById(
-      incomingComment.tweetId
-    ).populate("comments");
-
+    const returnUserComment = await TweetModel.findById(tweetId).populate(
+      "comments"
+    );
+    // console.log("💖💖💖", returnUserComment);
     // Get the latest comment
     const latestComment =
       returnUserComment?.comments[returnUserComment?.comments.length - 1];
@@ -75,8 +79,17 @@ async function handleDeleteCommentById(req, res) {
   }
 }
 
+async function handleLikeCommentById(req, res) {
+  const commentId = req.params.id;
+  const userId = req.user;
+
+  console.log(userId);
+  console.log(commentId);
+}
+
 module.exports = {
   handleGetAllComment,
   handlePostComment,
   handleDeleteCommentById,
+  handleLikeCommentById,
 };
