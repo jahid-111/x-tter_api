@@ -76,10 +76,49 @@ async function handleDeleteTweetById(req, res) {
     .status(200)
     .json({ message: "Delete  Success", delTweetData: deleteTweet });
 }
+
+async function handleLikeTweetById(req, res) {
+  const tweetId = req.params.id;
+  const userId = req.user._id;
+
+  // console.log(tweetId);
+  // console.log("user ID", userId);
+  try {
+    const tweet = await TweetModel.findById(tweetId);
+
+    //Checking Like
+    const isLiked = tweet.likes.some(
+      (like) => like._id.toString() === userId.toString()
+    );
+
+    if (isLiked) {
+      //Filter each put request
+      tweet.likes = tweet.likes.filter(
+        (like) => like._id.toString() !== userId.toString()
+      );
+
+      await tweet.save();
+      return res
+        .status(200)
+        .json({ message: "Unliked", isLiked: false, tweetId, userId });
+    } else {
+      tweet.likes.push(userId);
+      await tweet.save();
+      return res
+        .status(200)
+        .json({ message: "Liked", isLiked: true, tweetId, userId });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Server error");
+  }
+}
+
 module.exports = {
   handleGetAllTweet,
   handleGetTweetById,
   handleUpdateTweet,
   handleCreateNewTweet,
   handleDeleteTweetById,
+  handleLikeTweetById,
 };

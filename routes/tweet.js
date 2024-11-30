@@ -5,6 +5,7 @@ const {
   handleUpdateTweet,
   handleCreateNewTweet,
   handleDeleteTweetById,
+  handleLikeTweetById,
 } = require("../controllers/tweetController");
 
 // --------------^^^^^^^^^^^^------------------------------- Modules
@@ -18,5 +19,7 @@ router
   .get(handleGetTweetById)
   .patch(handleUpdateTweet)
   .delete(handleDeleteTweetById);
+
+router.route("/:id/like").put(handleLikeTweetById);
 
 module.exports = router;
