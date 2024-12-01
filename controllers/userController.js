@@ -15,14 +15,21 @@ async function handleGetUserById(req, res) {
 
 async function handleUpdateUserById(req, res) {
   const userId = req.params?.id;
-  const updates = req.body;
+
+  const { userName, displayName, dateOfBirth, bio, website, profileImage } =
+    req.body;
+
+  // console.log(userName, displayName, bio, website, dateOfBirth, profileImage);
   try {
     const userUpdate = await UserModel.findByIdAndUpdate(
       userId,
       {
-        userName: updates.userName,
-        dateOfBirth: updates.dateOfBirth,
-        password: updates.password,
+        userName,
+        dateOfBirth,
+        bio,
+        website,
+        profileImage,
+        displayName,
       },
       {
         new: true, // Return the updated document
