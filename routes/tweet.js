@@ -6,6 +6,7 @@ const {
   handleCreateNewTweet,
   handleDeleteTweetById,
   handleLikeTweetById,
+  handleRetweetPost,
 } = require("../controllers/tweetController");
 
 // --------------^^^^^^^^^^^^------------------------------- Modules
@@ -21,5 +22,7 @@ router
   .delete(handleDeleteTweetById); //DELETE Single Tweet
 
 router.route("/:id/like").put(handleLikeTweetById); //LIKE Single Tweet
+
+router.route("/:id/retweet").post(handleRetweetPost); //SHARE a Tweet
 
 module.exports = router;

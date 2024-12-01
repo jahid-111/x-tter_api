@@ -27,6 +27,8 @@ A Twitter clone built with the **MERN** stack (MongoDB, Express, React, Node.js)
   Like a tweet by its ID.
 - **POST**: [/api/tweet](http://localhost:8000/api/tweet)  
   Create a new tweet.
+- **POST** [/api/tweet/[tweetid]/retweet](http://localhost:8000/api/tweet/[tweetid]/retweet)
+  Share a tweet your Wall
 
 ---
 

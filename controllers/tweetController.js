@@ -114,6 +114,30 @@ async function handleLikeTweetById(req, res) {
   }
 }
 
+const handleRetweetPost = async (req, res) => {
+  const userId = req.user._id;
+  const tweetId = req.params.id;
+  // console.log(userId);
+  try {
+    const retweeted = await TweetModel.findByIdAndUpdate(
+      tweetId,
+      { $push: { retweets: userId } },
+      { new: true }
+    );
+
+    if (!retweeted) {
+      return res.status(404).json({ message: "Tweet not found" });
+    }
+    console.log(retweeted);
+    res.status(200).json({ message: "Retweeted successfully", retweeted });
+  } catch (error) {
+    console.error("Error 🔴🔴", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = handleRetweetPost;
+
 module.exports = {
   handleGetAllTweet,
   handleGetTweetById,
@@ -121,4 +145,5 @@ module.exports = {
   handleCreateNewTweet,
   handleDeleteTweetById,
   handleLikeTweetById,
+  handleRetweetPost,
 };
