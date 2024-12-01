@@ -62,6 +62,8 @@ A Twitter clone built with the **MERN** stack (MongoDB, Express, React, Node.js)
   Update a user's details.
 - **DELETE**: [/api/user/[userid]](http://localhost:8000/api/user/[userid])  
   Delete a user by their ID.
+- **PUT** : [/api/user/[targetUser]/follow] http://localhost:8000/api/user/[targetUser]/follow
+  Follow Each other
 
 ---
 

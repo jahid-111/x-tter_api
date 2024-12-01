@@ -5,6 +5,7 @@ const {
   handleGetUserById,
   handleUpdateUserById,
   handleDeleteUserById,
+  handleUserFollower,
 } = require("../controllers/userController");
 // --------------^^^^^^^^^^^^------------------------------- Modules
 
@@ -17,5 +18,7 @@ router
   .get(handleGetUserById) //SINGLE User
   .patch(handleUpdateUserById) //USER Update
   .delete(handleDeleteUserById); //DELETE User
+
+router.route("/:id/follow").put(handleUserFollower); //User Follow And UnFollow
 
 module.exports = router;
