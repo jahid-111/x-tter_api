@@ -3,24 +3,50 @@ const UserModel = require("../models/user_model");
 // --------------^^^^^^^^^^^^------------------------------- Modules
 
 async function handleGetAllUser(req, res) {
-  const userAll = await UserModel.find({});
-  return res.status(200).json(userAll);
+  try {
+    const user = await UserModel.find({}).select("-password -salt");
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({
+      message: "An unexpected error occurred. Please try again later.",
+    });
+  }
 }
 
 async function handleGetUserById(req, res) {
-  const userId = req.params?.id;
-  const user = await UserModel.findById(userId);
-  return res.status(200).json(user);
+  try {
+    const userId = req.params?.id;
+
+    const user = await UserModel.findById(userId).select("-password -salt");
+    if (!user) {
+      return res.status(400).json({ message: "User not  Found" });
+    }
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({
+      message: "An unexpected error occurred. Please try again later.",
+    });
+  }
 }
 
 async function handleUpdateUserById(req, res) {
-  const userId = req.params?.id;
+  const userId = req.params?.id; // The ID of the user to update
+  const auth = req.user._id; // Authenticated user's ID from middleware
 
   const { userName, displayName, dateOfBirth, bio, website, profileImage } =
     req.body;
 
-  // console.log(userName, displayName, bio, website, dateOfBirth, profileImage);
   try {
+    // Authorization check: Allow update only if the user owns the profile
+    if (auth.toString() !== userId.toString()) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized: You can't update this user." });
+    }
+
+    // console.log(userName, displayName, bio, website, dateOfBirth, profileImage);
+
+    // Update the user
     const userUpdate = await UserModel.findByIdAndUpdate(
       userId,
       {
@@ -33,33 +59,56 @@ async function handleUpdateUserById(req, res) {
       },
       {
         new: true, // Return the updated document
-        runValidators: true, // Run validators on the updated fields
+        runValidators: true, // Ensure validators are run for updated fields
       }
-    );
+    ).select("-password -salt");
+
+    if (!userUpdate) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
     return res
       .status(200)
-      .json({ message: "Update Successfully", updated: userUpdate });
+      .json({ message: "Updated successfully", updated: userUpdate });
   } catch (error) {
+    console.error(error);
+
+    // Handle duplicate key errors
     if (error.code === 11000) {
-      res.status(403).json(error);
-    } else {
-      return res.status(500).json({
-        message: "An unexpected error occurred. Please try again later.",
-      });
+      return res.status(403).json({ message: "Duplicate field value.", error });
     }
+
+    return res.status(500).json({
+      message: "An unexpected error occurred. Please try again later.",
+    });
   }
 }
 
 async function handleDeleteUserById(req, res) {
-  const deletedUser = await UserModel.findByIdAndDelete(req.params.id);
+  try {
+    const userId = req.params.id;
+    const auth = req.user._id;
 
-  if (!deletedUser) {
-    return res.status(404).json({ message: "User not found." }); // Handle case where user does not exist
+    // Check if the authenticated user matches the ID to be deleted
+    if (userId.toString() !== auth.toString()) {
+      return res.status(401).json({ message: "Not authorized to delete user" });
+    }
+
+    // Clear cookie
+    res.clearCookie("uid");
+
+    // Delete the user
+    const deletedUser = await UserModel.findByIdAndDelete(userId);
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // console.log("User Deleted");
+    return res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    return res.status(500).json({ message: "An unexpected error occurred" });
   }
-
-  return res
-    .status(200)
-    .json({ message: "Delete Success", delUserData: deletedUser });
 }
 
 const handleUserFollower = async (req, res) => {
@@ -109,7 +158,7 @@ const handleUserFollower = async (req, res) => {
       IsFollowing: !isFollow,
     });
   } catch (error) {
-    console.error("Error 🔴🔴  :", error);
+    console.error("Error 🔴🔴:", error);
     return res.status(500).json({ error: "Internal server error." });
   }
 };

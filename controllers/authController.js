@@ -1,4 +1,4 @@
-const { setUser } = require("../services/authService");
+const { setUser } = require("../services/JWTService");
 const UserModel = require("../models/user_model");
 
 async function handleUserSignin(req, res) {
@@ -23,7 +23,13 @@ async function handleUserSignin(req, res) {
     });
 
     return res.status(200).json({
-      user,
+      userData: {
+        userName: user.userName,
+        email: user.email,
+        dateOfBirth: user.dateOfBirth,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
     });
   } catch (error) {
     // console.error("Error during user sign-in:", error.message);
@@ -57,13 +63,21 @@ async function handleUserSignup(req, res) {
       dateOfBirth: newUser.dateOfBirth,
     });
 
+    const createdData = {
+      userName: response.userName,
+      email: response.email,
+      dateOfBirth: response.dateOfBirth,
+      profileImage: response.profileImage,
+      createdAt: response.createdAt,
+    };
+
     return res
       .status(201)
-      .json({ message: "Create Successfully", createdData: response });
+      .json({ message: "Create Successfully", createdData });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     if (error.code === 11000) {
-      res.status(403).json(error);
+      res.status(409).json(error);
     } else {
       return res.status(500).json({
         message: "An unexpected error occurred. Please try again later.",

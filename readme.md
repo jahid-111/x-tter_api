@@ -45,7 +45,7 @@ A Twitter clone built with the **MERN** stack (MongoDB, Express, React, Node.js)
 
 - **GET**: [/api/comment](http://localhost:8000/api/comment)  
   Retrieve all comments.
-- **POST**: [/api/comment](http://localhost:8000/api/comment)  
+- **POST**: [/api/comment/[tweetid]/comment](http://localhost:8000/api/comment)  
   Create a new comment.
 - **DELETE**: [/api/comment/[commentid]](http://localhost:8000/api/comment/[commentid])  
   Delete a comment by its ID.

@@ -9,7 +9,9 @@ async function handleGetAllComment(req, res) {
     return res.status(200).json(allComment);
   } catch (error) {
     console.error("Error fetching comments:", error);
-    return res.status(500).json({ message: "Failed to fetch comments" });
+    return res.status(500).json({
+      message: "An unexpected error occurred. Please try again later.",
+    });
   }
 }
 
@@ -62,24 +64,46 @@ async function handlePostComment(req, res) {
 
 async function handleDeleteCommentById(req, res) {
   const commentId = req.params?.id;
-  // console.log(commentId);
+  const auth = req.user._id;
 
   try {
-    const deleteComment = await CommentModel.findByIdAndDelete(commentId);
+    const comment = await CommentModel.findById(commentId).populate("author");
 
-    if (!deleteComment) {
+    // console.log("comment ✖️✖️✖️", comment);
+
+    if (!comment) {
       return res.status(404).json({ message: "Comment not found" });
     }
 
-    // console.log("💖💖 Comment deleted successfully");
-    return res.status(200).json({ message: "Delete Success" });
+    // Check if the current user is the author of the comment
+    if (comment.author._id.toString() !== auth.toString()) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this comment" });
+    }
+
+    // Delete the comment from the CommentModel
+    await CommentModel.findByIdAndDelete(commentId);
+
+    // Remove the comment ID from the TweetModel's comments array
+    await TweetModel.updateOne(
+      { comments: commentId }, // Locate the tweet containing the comment
+      { $pull: { comments: commentId } } // Remove the comment ID from the array
+    );
+
+    return res.status(200).json({
+      message: "Comment deleted successfully",
+    });
   } catch (error) {
     console.error("Error deleting comment:", error);
-    return res.status(500).json({ message: "Failed to delete comment" });
+    return res.status(500).json({
+      message: "An unexpected error occurred. Please try again later.",
+    });
   }
 }
 
 async function handleLikeCommentById(req, res) {
+  //on Develop
   const commentId = req.params.id;
   const userId = req.user;
 

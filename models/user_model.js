@@ -47,6 +47,10 @@ const userSchema = new mongoose.Schema(
         ref: "tweets",
       },
     ],
+    retweet: {
+      type: String,
+      ref: "tweet",
+    },
     followers: [
       {
         type: mongoose.Schema.Types.ObjectId,

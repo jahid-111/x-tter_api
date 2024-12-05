@@ -1,5 +1,5 @@
 const express = require("express");
-
+require("dotenv").config();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const dbConnect = require("./services/dbConnectMongo");
@@ -17,7 +17,7 @@ const commentRouter = require("./routes/comment");
 
 // --------------^^^^^^^^^^^^------------------------------- /ROUTER
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 dbConnect();
 
