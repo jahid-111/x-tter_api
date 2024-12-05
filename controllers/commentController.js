@@ -1,5 +1,6 @@
 const CommentModel = require("../models/comment_model");
 const TweetModel = require("../models/tweet_model");
+const badWords = require("../utils/badWords");
 
 // --------------^^^^^^^^^^^^------------------------------- Modules
 
@@ -23,6 +24,18 @@ async function handlePostComment(req, res) {
 
     // console.log(incomingComment);
     // console.log(userId);
+
+    const words = incomingComment.content.toLowerCase().split(/\s+/);
+
+    const containsBadWord = words.some((word) => badWords.includes(word));
+    // console.log(containsBadWord);
+
+    if (containsBadWord) {
+      return res.status(400).json({
+        message:
+          "You are **restricted permanently. The word(s) used do not comply with our terms.",
+      });
+    }
 
     if (!incomingComment.content) {
       return res.status(400).json({ error: "Comment content is required." });
