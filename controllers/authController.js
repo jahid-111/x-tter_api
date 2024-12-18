@@ -21,14 +21,19 @@ async function handleUserSignin(req, res) {
 
     const isProd = process.env.NODE_ENV === "production";
 
-    res.cookie("uid", tokenJwt, {
+    const cookieOptions = {
       httpOnly: true,
       secure: isProd, // Required for HTTPS in production
       sameSite: isProd ? "None" : "Lax", // Required for cross-site cookies
       maxAge: 24 * 60 * 60 * 1000, // 1 day expiration
-      domain: isProd ? ".twitter-x-snowy.vercel.app" : "localhost", // Correct domain
       path: "/", // Set for all routes
-    });
+    };
+    console.log(cookieOptions);
+    if (isProd) {
+      cookieOptions.domain = ".twitter-x-snowy.vercel.app"; // Correct domain
+    }
+
+    res.cookie("uid", tokenJwt, cookieOptions);
 
     console.log(isProd);
     return res.status(200).json({
