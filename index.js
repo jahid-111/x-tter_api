@@ -23,7 +23,7 @@ dbConnect();
 
 app.use(
   cors({
-    origin: "*",
+    origin: ["https://twitter-x-snowy.vercel.app", "localhost"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
