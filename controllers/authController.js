@@ -16,10 +16,8 @@ async function handleUserSignin(req, res) {
 
     // Set the token in a secure cookie
     res.cookie("uid", tokenJwt, {
-      httpOnly: true, // Prevent client-side access to cookies for security
-      secure: process.env.NODE_ENV === "production", // HTTPS only in production
-      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Cross-origin behavior
-      maxAge: 24 * 60 * 60 * 1000, // Cookie expiration time (1 day)
+      sameSite: "None",
+      secure: true,
     });
 
     return res.status(200).json({
