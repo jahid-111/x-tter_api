@@ -3,6 +3,7 @@ const UserModel = require("../models/user_model");
 
 async function handleUserSignin(req, res) {
   const { email, password } = req.body;
+  // console.log(email,password)
 
   if (!req.body || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
@@ -25,12 +26,14 @@ async function handleUserSignin(req, res) {
       secure: isProd, // Required for HTTPS in production
       sameSite: isProd ? "None" : "Lax", // Required for cross-site cookies
       maxAge: 24 * 60 * 60 * 1000, // 1 day expiration
-      domain: isProd ? "twitter-x-snowy.vercel.app" : "localhost", // Correct domain
+      domain: isProd ? ".twitter-x-snowy.vercel.app" : "localhost", // Correct domain
       path: "/", // Set for all routes
     });
 
+    console.log(isProd);
     return res.status(200).json({
       userData: {
+        isProd,
         userName: user.userName,
         email: user.email,
         dateOfBirth: user.dateOfBirth,
