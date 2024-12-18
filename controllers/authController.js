@@ -18,6 +18,8 @@ async function handleUserSignin(req, res) {
     res.cookie("uid", tokenJwt, {
       sameSite: "None",
       secure: true,
+      domain: "twitter-x-snowy.vercel.app", // Without the protocol (https://)
+      path: "/",
     });
 
     return res.status(200).json({
