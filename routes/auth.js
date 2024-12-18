@@ -8,6 +8,7 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(handleUserSignin).post(handleUserSignup); //USER AUTH
+router.route("/signin").post(handleUserSignin);
+router.route("signup").post(handleUserSignup); //USER AUTH
 
 module.exports = router;
