@@ -18,12 +18,15 @@ async function handleUserSignin(req, res) {
 
     // Define cookie options
     const cookieOptions = {
-      httpOnly: true, // Prevent client-side JavaScript access
-      secure: process.env.NODE_ENV === "production", // Use secure cookies only in production
-      sameSite: "None", // Allow cookies to be sent in cross-origin requests
-      path: "/", // Make the cookie accessible across the entire domain
-      maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie valid for 7 days
+      httpOnly: true,
+      secure: true,
+      sameSite: "None", // Required for cross-origin cookies
+      domain: "twitter-x-snowy.vercel.app", // Specific to your frontend
+      // domain: "localhost",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     };
+    res.cookie("uid", tokenJwt, cookieOptions);
 
     // Log for debugging (remove in production)
     console.log("Generated Token:", tokenJwt);
