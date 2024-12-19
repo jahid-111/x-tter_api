@@ -16,10 +16,13 @@ async function handleUserSignin(req, res) {
 
     // Set the token in a secure cookie
     res.cookie("uid", tokenJwt, {
-      httpOnly: true, // Helps mitigate XSS attacks
-      secure: process.env.NODE_ENV === "production", // Ensures cookie is only sent over HTTPS in production
-      sameSite: "None", // Important for cross-origin cookies
-      domain: ".vercel.app", // or a domain matching your frontend's domain
+      sameSite: "None",
+      secure: true,
+      domain:
+        process.env.NODE_ENV === "production"
+          ? "twitter-x-snowy.vercel.app"
+          : "localhost", // Adjust domain based on environment
+      path: "/",
     });
 
     return res.status(200).json({
