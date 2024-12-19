@@ -4,33 +4,34 @@ const UserModel = require("../models/user_model");
 async function handleUserSignin(req, res) {
   const { email, password } = req.body;
 
+  // Validate the request body
   if (!req.body || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
+    // Verify the user credentials
     const user = await UserModel.mathPassword(email, password);
 
     // Generate a JWT token
     const tokenJwt = setUser(user);
 
+    // Define cookie options
     const cookieOptions = {
       httpOnly: true, // Prevent client-side JavaScript access
       secure: process.env.NODE_ENV === "production", // Use secure cookies only in production
-      sameSite: "Strict", // Prevent CSRF attacks
+      sameSite: "None", // Allow cookies to be sent in cross-origin requests
       path: "/", // Make the cookie accessible across the entire domain
     };
-    // Set domain based on the environment
-    if (process.env.NODE_ENV === "production") {
-      cookieOptions.domain = "twitter-x-snowy.vercel.app"; // Production domain
-    } else {
-      console.log("local");
-      cookieOptions.domain = "localhost"; // Development domain
-    }
+
+    // Log for debugging (remove in production)
+    console.log("Generated Token:", tokenJwt);
+    console.log("Cookie Options:", cookieOptions);
 
     // Set the token in a secure cookie
     res.cookie("uid", tokenJwt, cookieOptions);
 
+    // Send the user data response
     return res.status(200).json({
       userData: {
         userName: user.userName,
@@ -39,6 +40,7 @@ async function handleUserSignin(req, res) {
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       },
+      cookieOptions,
     });
   } catch (error) {
     console.error("Error during user sign-in:", error.message);
