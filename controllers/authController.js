@@ -1,5 +1,6 @@
 const { setUser } = require("../services/JWTService");
 const UserModel = require("../models/user_model");
+require("dotenv").config();
 
 async function handleUserSignin(req, res) {
   const { email, password } = req.body;
@@ -18,22 +19,22 @@ async function handleUserSignin(req, res) {
 
     // Define cookie options
     const cookieOptions = {
-      httpOnly: true,
       secure: true,
+      httpOnly: true,
       sameSite: "None", // Required for cross-origin cookies
-      domain: "twitter-x-snowy.vercel.app", // Specific to your frontend
-      // domain: "localhost",
+      domain:
+        process.env.NODE_ENV === "production"
+          ? "twitter-x-snowy.vercel.app"
+          : "localhost", // Dynamically set domain
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     };
+    // Set the token in a secure cookie
     res.cookie("uid", tokenJwt, cookieOptions);
 
     // Log for debugging (remove in production)
     console.log("Generated Token:", tokenJwt);
     console.log("Cookie Options:", cookieOptions);
-
-    // Set the token in a secure cookie
-    res.cookie("uid", tokenJwt, cookieOptions);
 
     // Send the user data response
     return res.status(200).json({
