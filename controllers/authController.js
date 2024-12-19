@@ -14,16 +14,22 @@ async function handleUserSignin(req, res) {
     // Generate a JWT token
     const tokenJwt = setUser(user);
 
+    const cookieOptions = {
+      httpOnly: true, // Prevent client-side JavaScript access
+      secure: process.env.NODE_ENV === "production", // Use secure cookies only in production
+      sameSite: "Strict", // Prevent CSRF attacks
+      path: "/", // Make the cookie accessible across the entire domain
+    };
+    // Set domain based on the environment
+    if (process.env.NODE_ENV === "production") {
+      cookieOptions.domain = "twitter-x-snowy.vercel.app"; // Production domain
+    } else {
+      console.log("local");
+      cookieOptions.domain = "localhost"; // Development domain
+    }
+
     // Set the token in a secure cookie
-    res.cookie("uid", tokenJwt, {
-      sameSite: "None",
-      secure: true,
-      domain:
-        process.env.NODE_ENV === "production"
-          ? "twitter-x-snowy.vercel.app"
-          : "localhost", // Adjust domain based on environment
-      path: "/",
-    });
+    res.cookie("uid", tokenJwt, cookieOptions);
 
     return res.status(200).json({
       userData: {
