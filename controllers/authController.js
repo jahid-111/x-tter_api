@@ -16,10 +16,10 @@ async function handleUserSignin(req, res) {
 
     // Set the token in a secure cookie
     res.cookie("uid", tokenJwt, {
-      sameSite: "None",
-      secure: true,
-      domain: "twitter-x-snowy.vercel.app", // Without the protocol (https://)
-      path: "/",
+      httpOnly: true, // Helps mitigate XSS attacks
+      secure: process.env.NODE_ENV === "production", // Ensures cookie is only sent over HTTPS in production
+      sameSite: "None", // Important for cross-origin cookies
+      domain: ".vercel.app", // or a domain matching your frontend's domain
     });
 
     return res.status(200).json({
@@ -32,7 +32,7 @@ async function handleUserSignin(req, res) {
       },
     });
   } catch (error) {
-    // console.error("Error during user sign-in:", error.message);
+    console.error("Error during user sign-in:", error.message);
 
     return res.status(401).json({
       message: error.message,
