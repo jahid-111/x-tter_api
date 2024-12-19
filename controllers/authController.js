@@ -22,6 +22,7 @@ async function handleUserSignin(req, res) {
       secure: process.env.NODE_ENV === "production", // Use secure cookies only in production
       sameSite: "None", // Allow cookies to be sent in cross-origin requests
       path: "/", // Make the cookie accessible across the entire domain
+      maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie valid for 7 days
     };
 
     // Log for debugging (remove in production)
