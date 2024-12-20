@@ -18,7 +18,7 @@ async function handleUserSignin(req, res) {
       secure: true,
       sameSite: "None",
       maxAge: 24 * 60 * 60 * 1000, // Cookie lifespan: 1 day
-      domain: "vercel.app", // Specify the domain for cookies (adjust to your actual domain)
+      domain: ".vercel.app", // Specify the domain for cookies (adjust to your actual domain)
       path: "/",
     };
 
