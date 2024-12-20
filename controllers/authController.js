@@ -13,14 +13,17 @@ async function handleUserSignin(req, res) {
 
     // Generate a JWT token
     const tokenJwt = setUser(user);
+    const cookieOptions = {
+      httpOnly: true, // Prevent client-side access to cookies for security
+      secure: true,
+      sameSite: "None",
+      maxAge: 24 * 60 * 60 * 1000, // Cookie lifespan: 1 day
+      domain: "vercel.app", // Specify the domain for cookies (adjust to your actual domain)
+      path: "/",
+    };
 
     // Set the token in a secure cookie
-    res.cookie("uid", tokenJwt, {
-      httpOnly: true, // Prevent client-side access to cookies for security
-      secure: process.env.NODE_ENV === "production", // HTTPS only in production
-      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Cross-origin behavior
-      maxAge: 24 * 60 * 60 * 1000, // Cookie expiration time (1 day)
-    });
+    res.cookie("uid", tokenJwt, cookieOptions);
 
     return res.status(200).json({
       userData: {
