@@ -19,17 +19,17 @@ async function handleUserSignin(req, res) {
 
     // Define cookie options
     const cookieOptions = {
-      secure: true,
-      httpOnly: true,
-      sameSite: "None", // Required for cross-origin cookies
+      httpOnly: true, // Ensures the cookie is not accessible via JavaScript
+      secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
+      sameSite: "lax", // Allows cookies for same-site requests and top-level navigation
       domain:
-        process.env.NODE_ENV === "production"
-          ? "twitter-x-snowy.vercel.app"
-          : "localhost", // Dynamically set domain
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        process.env.NODE_ENV === "development"
+          ? "localhost"
+          : ".twitter-x-snowy.vercel.app", // Adjust to match your domain
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     };
-    // Set the token in a secure cookie
+
+    // Set the cookie and send the response
     res.cookie("uid", tokenJwt, cookieOptions);
 
     // Log for debugging (remove in production)
@@ -38,6 +38,7 @@ async function handleUserSignin(req, res) {
 
     // Send the user data response
     return res.status(200).json({
+      success: true,
       userData: {
         userName: user.userName,
         email: user.email,
@@ -45,11 +46,11 @@ async function handleUserSignin(req, res) {
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       },
-      cookieOptions,
     });
   } catch (error) {
     console.error("Error during user sign-in:", error.message);
 
+    // Send the error response
     return res.status(401).json({
       message: error.message,
     });
