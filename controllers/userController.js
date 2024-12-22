@@ -3,6 +3,7 @@ const UserModel = require("../models/user_model");
 // --------------^^^^^^^^^^^^------------------------------- Modules
 
 async function handleGetAllUser(req, res) {
+  console.log(req);
   try {
     const user = await UserModel.find({}).select("-password -salt");
     return res.status(200).json(user);
@@ -11,6 +12,12 @@ async function handleGetAllUser(req, res) {
       message: "An unexpected error occurred. Please try again later.",
     });
   }
+}
+
+async function handleGetLoggedUser(req, res) {
+  const loggedUser = req.body;
+  console.log(loggedUser);
+  return res.status(200).json(loggedUser);
 }
 
 async function handleGetUserById(req, res) {
@@ -165,6 +172,7 @@ const handleUserFollower = async (req, res) => {
 
 module.exports = {
   handleGetAllUser,
+  handleGetLoggedUser,
   handleGetUserById,
   handleUpdateUserById,
   handleDeleteUserById,

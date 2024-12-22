@@ -16,9 +16,9 @@ async function handleUserSignin(req, res) {
     const cookieOptions = {
       httpOnly: true, // Prevent client-side access to cookies for security
       secure: true,
-      sameSite: "None",
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
       maxAge: 24 * 60 * 60 * 1000, // Cookie lifespan: 1 day
-      domain: ".vercel.app", // Specify the domain for cookies (adjust to your actual domain)
+      domain: ".twitter-x-snowy.vercel.app", // Specify the domain for cookies (adjust to your actual domain)
       path: "/",
     };
 

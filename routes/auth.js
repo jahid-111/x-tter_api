@@ -9,6 +9,6 @@ const {
 const router = express.Router();
 
 router.route("/signin").post(handleUserSignin);
-router.route("signup").post(handleUserSignup); //USER AUTH
+router.route("/signup").post(handleUserSignup); //USER AUTH
 
 module.exports = router;

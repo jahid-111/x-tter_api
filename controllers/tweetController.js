@@ -5,9 +5,15 @@ const UserModel = require("../models/user_model");
 
 async function handleGetAllTweet(req, res) {
   try {
-    const tweets = await TweetModel.find({});
+    // Fetch tweets and populate the 'author' field with user details
+    const tweets = await TweetModel.find({}).populate(
+      "author",
+      "userName email"
+    ); // Populate only the
+    console.log(tweets);
     return res.status(200).json(tweets);
   } catch (error) {
+    console.error(error); // Log the error for debugging
     return res.status(500).json({
       message: "An unexpected error occurred. Please try again later.",
     });
@@ -17,7 +23,10 @@ async function handleGetAllTweet(req, res) {
 async function handleGetTweetById(req, res) {
   try {
     const tweetId = req.params?.id;
-    const tweet = await TweetModel.findById(tweetId);
+    const tweet = await TweetModel.findById(tweetId).populate(
+      "author",
+      "userName email"
+    );
     res.status(200).json(tweet);
   } catch (error) {
     return res.status(500).json({
