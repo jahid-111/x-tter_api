@@ -13,18 +13,14 @@ async function handleUserSignin(req, res) {
 
     // Generate a JWT token
     const tokenJwt = setUser(user);
-    const cookieOptions = {
-      httpOnly: true, // Prevent client-side access to cookies for security
-      secure: true,
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-      maxAge: 24 * 60 * 60 * 1000, // Cookie lifespan: 1 day
-      domain: ".twitter-x-snowy.vercel.app", // Specify the domain for cookies (adjust to your actual domain)
-      path: "/",
-    };
+    // console.log("tokenJwt =>>>>>> ", tokenJwt);
 
-    // Set the token in a secure cookie
-    res.cookie("uid", tokenJwt, cookieOptions);
+    // Set cookie options
 
+    // Add token to response headers
+    res.setHeader("Authorization", `Bearer ${tokenJwt}`);
+
+    // Send user data
     return res.status(200).json({
       userData: {
         userName: user.userName,
@@ -35,17 +31,15 @@ async function handleUserSignin(req, res) {
       },
     });
   } catch (error) {
-    // console.error("Error during user sign-in:", error.message);
-
     return res.status(401).json({
-      message: error.message,
+      message: error.message || "Invalid credentials. Please try again.",
     });
   }
 }
 
 async function handleUserSignup(req, res) {
   const newUser = req.body;
-
+  // console.log(newUser);
   if (
     !newUser ||
     !newUser.userName ||
@@ -53,7 +47,7 @@ async function handleUserSignup(req, res) {
     !newUser.password ||
     !newUser.dateOfBirth
   ) {
-    return res.status(400).json({ message: "All Fields Required" });
+    return res.status(400).json({ message: "All Fields Required sss" });
   }
 
   // console.log(newUser.userName);
@@ -82,6 +76,7 @@ async function handleUserSignup(req, res) {
     if (error.code === 11000) {
       res.status(409).json(error);
     } else {
+      console.log(error);
       return res.status(500).json({
         message: "An unexpected error occurred. Please try again later.",
       });

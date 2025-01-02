@@ -34,9 +34,9 @@ A Twitter clone built with the **MERN** stack (MongoDB, Express, React, Node.js)
 
 ## AUTH
 
-- **POST**: [/api/auth](http://localhost:8000/api/auth)  
+- **POST**: [/api/auth](http://localhost:8000/api/auth/signin)  
   Register a new user by sending user credentials (userName, email, password, dateOfBirth).
-- **GET**: [/api/auth](http://localhost:8000/api/auth)  
+- **GET**: [/api/auth](http://localhost:8000/api/auth/signup)  
   Get user credentials after registration.
 
 ---

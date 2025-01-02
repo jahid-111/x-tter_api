@@ -6,16 +6,17 @@ function setUser(user) {
   if (!user._id || !user.email) {
     throw new Error("User object must contain _id and email.");
   }
-  return jwt.sign(
-    { _id: user._id, email: user.email },
-    process.env.JWT_SECRET_KEY
-  );
+  const payload = { _id: user._id, email: user.email };
+  const options = { expiresIn: "1h" }; // Expiry time for the token (1 hour)
+
+  return jwt.sign(payload, process.env.JWT_SECRET_KEY, options);
 }
+
 function getUser(token) {
   try {
     return jwt.verify(token, process.env.JWT_SECRET_KEY);
   } catch (error) {
-    console.log(error);
+    console.error("JWT verification failed:", error);
     return null;
   }
 }

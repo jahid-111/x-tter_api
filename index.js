@@ -11,6 +11,8 @@ const { logReqRes } = require("./middlewares/logReqRes");
 const { restrictToLoggedUserOnly } = require("./middlewares/auth");
 
 const authRouter = require("./routes/auth");
+const socialRouter = require("./routes/social");
+const verify = require("./routes/verifyToken");
 const userRouter = require("./routes/xuser");
 const tweetRouter = require("./routes/tweet");
 const commentRouter = require("./routes/comment");
@@ -23,9 +25,14 @@ dbConnect();
 
 app.use(
   cors({
-    origin: ["https://twitter-x-snowy.vercel.app", "http://localhost:3000"],
+    origin: [
+      "https://twitter-x-snowy.vercel.app",
+      "http://localhost:3000",
+      "http://localhost:5173",
+    ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
+    exposedHeaders: ["Authorization"], // Expose Authorization header
   })
 );
 
@@ -34,10 +41,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(logReqRes("log.txt"));
 // --------------^^^^^^^^^^^^ ------------------------------- |--MIDDLEWARES--|
+app.use("/api/verify", restrictToLoggedUserOnly, verify);
 app.use("/api/auth", authRouter);
-app.use("/api/user", restrictToLoggedUserOnly, userRouter);
+app.use("/api/user", userRouter);
 app.use("/api/tweet", restrictToLoggedUserOnly, tweetRouter);
-app.use("/api/comment", restrictToLoggedUserOnly, commentRouter);
+app.use("/api/comment", commentRouter);
 
 app.listen(port, () =>
   console.log(`🟢🟢🟢 : http://localhost:${port}/api/user`)
