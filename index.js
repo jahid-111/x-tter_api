@@ -41,10 +41,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(logReqRes("log.txt"));
 // --------------^^^^^^^^^^^^ ------------------------------- |--MIDDLEWARES--|
-app.use("/api/verify", restrictToLoggedUserOnly, verify);
+app.use("/api/verify", verify);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
-app.use("/api/tweet", restrictToLoggedUserOnly, tweetRouter);
+app.use("/api/tweet", tweetRouter);
 app.use("/api/comment", commentRouter);
 
 app.listen(port, () =>
