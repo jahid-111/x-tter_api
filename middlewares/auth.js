@@ -5,7 +5,8 @@ async function restrictToLoggedUserOnly(req, res, next) {
   const userUid = req.headers.authorization?.split(" ")[1]; // Extract Bearer token
 
   console.log("🍪 Headers Token:", userUid); // Debugging token
-
+  const user = getUser(userUid);
+  console.log("--------", user);
   // If no token is provided, return 401 Unauthorized error
   if (!userUid) {
     return res.status(401).json({ message: "Please Login First" });

@@ -6,7 +6,7 @@ async function tokenVerifyController(req, res) {
   if (!token) {
     return res.status(401).json({ message: "No token provided" });
   }
-  console.log(token);
+  // console.log(token);
   try {
     // Verify token and get user info
     const user = getUser(token);

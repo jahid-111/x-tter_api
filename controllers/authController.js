@@ -11,14 +11,10 @@ async function handleUserSignin(req, res) {
   try {
     const user = await UserModel.mathPassword(email, password);
 
-    // Generate a JWT token
-    const tokenJwt = setUser(user);
+    const tokenJwt = setUser(user); // Set For Bearer token
     // console.log("tokenJwt =>>>>>> ", tokenJwt);
 
-    // Set cookie options
-
     // Add token to response headers
-    res.setHeader("Authorization", `Bearer ${tokenJwt}`);
 
     // Send user data
     return res.status(200).json({
@@ -28,6 +24,9 @@ async function handleUserSignin(req, res) {
         dateOfBirth: user.dateOfBirth,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
+      },
+      token: {
+        tokenJwt,
       },
     });
   } catch (error) {
@@ -40,6 +39,7 @@ async function handleUserSignin(req, res) {
 async function handleUserSignup(req, res) {
   const newUser = req.body;
   // console.log(newUser);
+  console.log(newUser);
   if (
     !newUser ||
     !newUser.userName ||
@@ -47,7 +47,7 @@ async function handleUserSignup(req, res) {
     !newUser.password ||
     !newUser.dateOfBirth
   ) {
-    return res.status(400).json({ message: "All Fields Required sss" });
+    return res.status(400).json({ message: "All Fields Required" });
   }
 
   // console.log(newUser.userName);

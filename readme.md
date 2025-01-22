@@ -34,10 +34,76 @@ A Twitter clone built with the **MERN** stack (MongoDB, Express, React, Node.js)
 
 ## AUTH
 
-- **POST**: [/api/auth](http://localhost:8000/api/auth/signin)  
-  Register a new user by sending user credentials (userName, email, password, dateOfBirth).
-- **GET**: [/api/auth](http://localhost:8000/api/auth/signup)  
-  Get user credentials after registration.
+### **POST**: [/api/auth/signin](http://localhost:8000/api/auth/signin)
+
+Registers a new user by sending user credentials.
+
+#### **Request Body**:
+
+```json
+{
+  "userName": "string",
+  "email": "string",
+  "password": "string",
+  "dateOfBirth": "string"
+}
+```
+
+#### **Process**:
+
+1. Decrypt the hashed password.
+2. Validate the user credentials.
+3. If valid, set the `Authorization` header:  
+   `Bearer ${tokenJwt}`.
+
+#### **Response**:
+
+```json
+{
+  "userData": {
+    "userName": "string",
+    "email": "string",
+    "dateOfBirth": "YYYY-MM-DD"
+  }
+}
+```
+
+---
+
+### **POST**: [/api/auth/signup](http://localhost:8000/api/auth/signup)
+
+Registers a user and returns user credentials.
+
+#### **Required Keys**:
+
+- `userName`
+- `email`
+- `password`
+- `dateOfBirth`
+
+#### **Request Body**:
+
+```json
+{
+  "userName": "string",
+  "email": "string",
+  "password": "string",
+  "dateOfBirth": "string"
+}
+```
+
+#### **Response**:
+
+```json
+{
+  "message": "Registration successful",
+  "userData": {
+    "userName": "string",
+    "email": "string",
+    "dateOfBirth": "string"
+  }
+}
+```
 
 ---
 
@@ -47,9 +113,9 @@ A Twitter clone built with the **MERN** stack (MongoDB, Express, React, Node.js)
   Retrieve all comments.
 - **POST**: [/api/comment/[tweetid]/comment](http://localhost:8000/api/comment)  
   Create a new comment.
-- **DELETE**: [/api/comment/[commentid]](http://localhost:8000/api/comment/[commentid])  
+- **DELETE**: [/api/comment/[commentId]](http://localhost:8000/api/comment/[commentId])  
   Delete a comment by its ID.
-- **PUT**: [/api/comment/[commentid]/like](http://localhost:8000/api/comment/[commentid]/like)  
+- **PUT**: [/api/comment/[commentId]/like](http://localhost:8000/api/comment/[commentId]/like)  
   Like a comment by its ID.
 
 ---
@@ -57,11 +123,61 @@ A Twitter clone built with the **MERN** stack (MongoDB, Express, React, Node.js)
 ## USER
 
 - **GET**: [/api/user](http://localhost:8000/api/user)  
-  Retrieve all users.
+   Retrieve all users.
+  ```json
+  {
+    "id": "string",
+    "userName": "string ",
+    "email": "string",
+    "dateOfBirth": "string",
+    "profileImage": "string",
+    "tweet": "Array",
+    "followers": "Array",
+    "following": "Array",
+    "createdAt": "2025-01-22T01:40:22.431Z",
+    "updatedAt": "2025-01-22T01:40:22.431Z",
+    "v": 0
+  }
+  ```
 - **GET**: [/api/user/[userid]](http://localhost:8000/api/user/[userid])  
-  Retrieve a specific user by their ID.
+   Retrieve a specific user by their ID.
+  ```json
+  {
+    "id": "string",
+    "userName": "string ",
+    "email": "string",
+    "dateOfBirth": "string",
+    "profileImage": "string",
+    "tweet": "Array",
+    "followers": "Array",
+    "following": "Array",
+    "createdAt": "2025-01-22T01:40:22.431Z",
+    "updatedAt": "2025-01-22T01:40:22.431Z",
+    "v": 0
+  }
+  ```
 - **PATCH**: [/api/user/[userid]](http://localhost:8000/api/user/[userid])  
-  Update a user's details.
+   Update a user's details.
+
+  ```json
+  {
+    "message": "Updated successfully",
+    "updated": {
+      "id": "string",
+      "userName": "string ",
+      "email": "string",
+      "dateOfBirth": "string",
+      "profileImage": "string",
+      "tweet": "Array",
+      "followers": "Array",
+      "following": "Array",
+      "createdAt": "2025-01-22T01:40:22.431Z",
+      "updatedAt": "2025-01-22T01:40:22.431Z",
+      "v": 0
+    }
+  }
+  ```
+
 - **DELETE**: [/api/user/[userid]](http://localhost:8000/api/user/[userid])  
   Delete a user by their ID.
 - **PUT** : [/api/user/[targetUser]/follow] http://localhost:8000/api/user/[targetUser]/follow

@@ -77,7 +77,8 @@ async function handleUpdateTweet(req, res) {
 
 async function handleCreateNewTweet(req, res) {
   const incomingTweet = req.body;
-
+  console.log(incomingTweet);
+  console.log(req?.params);
   try {
     if (!incomingTweet.content) {
       return res.status(400).json({ message: "Content Required" });

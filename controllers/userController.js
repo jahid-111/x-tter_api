@@ -3,7 +3,7 @@ const UserModel = require("../models/user_model");
 // --------------^^^^^^^^^^^^------------------------------- Modules
 
 async function handleGetAllUser(req, res) {
-  console.log(req);
+  // console.log(req);
   try {
     const user = await UserModel.find({}).select("-password -salt");
     return res.status(200).json(user);
@@ -23,7 +23,7 @@ async function handleGetLoggedUser(req, res) {
 async function handleGetUserById(req, res) {
   try {
     const userId = req.params?.id;
-
+    // console.log(req.params.id)
     const user = await UserModel.findById(userId).select("-password -salt");
     if (!user) {
       return res.status(400).json({ message: "User not  Found" });
@@ -38,14 +38,15 @@ async function handleGetUserById(req, res) {
 
 async function handleUpdateUserById(req, res) {
   const userId = req.params?.id; // The ID of the user to update
-  const auth = req.user._id; // Authenticated user's ID from middleware
+  // console.log(req)
+  // const auth = req.user._id; // Authenticated user's ID from middleware
 
   const { userName, displayName, dateOfBirth, bio, website, profileImage } =
     req.body;
 
   try {
     // Authorization check: Allow update only if the user owns the profile
-    if (auth.toString() !== userId.toString()) {
+    if (userId.toString() !== userId.toString()) {
       return res
         .status(401)
         .json({ message: "Unauthorized: You can't update this user." });

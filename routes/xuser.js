@@ -24,3 +24,5 @@ router
 router.route("/:id/follow").put(handleUserFollower); //User Follow And UnFollow
 
 module.exports = router;
+
+// handleDeleteUserById, handleUserFollower, (not tested yet)
