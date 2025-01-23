@@ -74,36 +74,36 @@ async function handleUpdateTweet(req, res) {
     });
   }
 }
-
+// 🥰🥰🥰
 async function handleCreateNewTweet(req, res) {
   const incomingTweet = req.body;
-  console.log(incomingTweet);
-  console.log(req?.params);
+
   try {
     if (!incomingTweet.content) {
-      return res.status(400).json({ message: "Content Required" });
+      return res.status(400).json({ message: "Content is required." });
     }
 
     const newTweet = await TweetModel.create({
       content: incomingTweet.content,
       contentInfo: incomingTweet.contentInfo,
-      author: req.user._id,
+      author: incomingTweet.userId,
     });
 
     await UserModel.findByIdAndUpdate(
-      req.user._id,
-      { $push: { tweet: newTweet._id } },
+      incomingTweet.userId, // Pass `userId` from the request
+      { $push: { tweet: newTweet._id } }, // Push the new tweet's ID
       { new: true }
     );
 
-    const returnUserTweet = await UserModel.findById(req.user._id).populate(
+    const updatedUser = await UserModel.findById(incomingTweet.userId).populate(
       "tweet"
     );
-    const latestTweet =
-      returnUserTweet?.tweet[returnUserTweet?.tweet.length - 1];
-    // console.log(returnUserTweet);
-    res.status(201).json({ latestTweet });
+    const latestTweet = updatedUser?.tweet[updatedUser?.tweet.length - 1];
+
+    // Respond with the latest tweet
+    return res.status(201).json({ latestTweet });
   } catch (error) {
+    console.error("Error creating tweet:", error);
     return res.status(500).json({
       message: "An unexpected error occurred. Please try again later.",
     });
@@ -148,42 +148,47 @@ async function handleDeleteTweetById(req, res) {
 }
 
 async function handleLikeTweetById(req, res) {
-  const tweetId = req.params.id;
-  const userId = req.user._id;
+  const { tweetId, userId } = req.body.payload;
 
-  // console.log(tweetId);
-  // console.log("user ID", userId);
   try {
     const tweet = await TweetModel.findById(tweetId);
 
-    //Checking Like
-    const isLiked = tweet.likes.some(
-      (like) => like._id.toString() === userId.toString()
-    );
+    if (!tweet) {
+      return res.status(404).json({ message: "Tweet not found" });
+    }
+
+    // console.log(tweet)
+    // Check if the user has already liked the tweet
+    console.log("TEST 🥲🥲", tweet.likes);
+    const isLiked = tweet.likes.includes(userId);
+    console.log(isLiked);
 
     if (isLiked) {
-      //Filter each put request
+      // Remove the like (unlike)
       tweet.likes = tweet.likes.filter(
-        (like) => like._id.toString() !== userId.toString()
+        (likedUserId) => likedUserId.toString() !== userId
       );
-
-      await tweet.save();
-      return res
-        .status(200)
-        .json({ message: "Unliked", isLiked: false, tweetId, userId });
     } else {
+      // Add the like
       tweet.likes.push(userId);
-      await tweet.save();
-      return res
-        .status(200)
-        .json({ message: "Liked", isLiked: true, tweetId, userId });
     }
+
+    await tweet.save();
+
+    return res.status(200).json({
+      message: isLiked ? "Unliked" : "Liked",
+      isLiked: isLiked,
+      tweetId,
+      userId,
+    });
   } catch (error) {
-    console.log(error);
-    return res.status(500).send("Server error");
+    console.error("Like/Unlike Error:", error);
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
   }
 }
-
 const handleRetweetPost = async (req, res) => {
   const userId = req.user._id;
   const tweetId = req.params.id;

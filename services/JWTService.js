@@ -15,7 +15,7 @@ function setUser(user) {
 
 function getUser(token) {
   try {
-    console.log("Token to verify:😍", JSON.parse(token)); // Log token here
+    // console.log("Token to verify:😍", JSON.parse(token)); // Log token here
     const user = jwt.verify(JSON.parse(token), process.env.JWT_SECRET_KEY);
     // console.log("Decoded user:", user); // Log decoded user
     return user;

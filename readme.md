@@ -23,7 +23,7 @@ A Twitter clone built with the **MERN** stack (MongoDB, Express, React, Node.js)
   Update a tweet by its ID.
 - **DELETE**: [/api/tweet/[tweetid]](http://localhost:8000/api/tweet/[tweetid])  
   Delete a tweet by its ID.
-- **PUT**: [/api/tweet/[tweetid]/like](http://localhost:8000/api/tweet/[tweetid]/like)  
+- **PUT LIKE**: [/api/tweet/[tweetid]/like](http://localhost:8000/api/tweet/[tweetid]/like)  -----------
   Like a tweet by its ID.
 - **POST**: [/api/tweet](http://localhost:8000/api/tweet)  
   Create a new tweet.
