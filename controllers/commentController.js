@@ -17,11 +17,14 @@ async function handleGetAllComment(req, res) {
 }
 
 async function handlePostComment(req, res) {
+  console.log(req.body);
   try {
     const incomingComment = req.body;
     const userId = req.user._id;
     const tweetId = req.params.id;
 
+    console.log(userId);
+    console.log(tweetId);
     // console.log(incomingComment);
     // console.log(userId);
 
@@ -31,9 +34,9 @@ async function handlePostComment(req, res) {
     // console.log(containsBadWord);
 
     if (containsBadWord) {
-      return res.status(400).json({
+      return res.status(403).json({
         message:
-          "You are **restricted permanently. The word(s) used do not comply with our terms.",
+          "Your submission contains inappropriate language. You are permanently restricted from posting.",
       });
     }
 

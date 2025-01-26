@@ -21,13 +21,18 @@ A Twitter clone built with the **MERN** stack (MongoDB, Express, React, Node.js)
   Retrieve a single tweet by its ID.
 - **PATCH**: [/api/tweet/[tweetid]](http://localhost:8000/api/tweet/[tweetid])  
   Update a tweet by its ID.
-- **DELETE**: [/api/tweet/[tweetid]](http://localhost:8000/api/tweet/[tweetid])  
-  Delete a tweet by its ID.
-- **PUT LIKE**: [/api/tweet/[tweetid]/like](http://localhost:8000/api/tweet/[tweetid]/like)  -----------
+- **DELETE**: [/api/tweet/[tweetid]](http://localhost:8000/api/tweet/[tweetid])
+
+  - Delete a tweet by its ID.
+  - must provide userid
+
+- **PUT LIKE**: [/api/tweet/[tweetid]/like](http://localhost:8000/api/tweet/[tweetid]/like)
+
   Like a tweet by its ID.
+
 - **POST**: [/api/tweet](http://localhost:8000/api/tweet)  
   Create a new tweet.
-- **POST** [/api/tweet/[tweetid]/retweet](http://localhost:8000/api/tweet/[tweetid]/retweet)
+- **POST** [/api/tweet/[tweetid]/retweet](http://localhost:8000/api/)
   Share a tweet your Wall
 
 ---
@@ -111,7 +116,7 @@ Registers a user and returns user credentials.
 
 - **GET**: [/api/comment](http://localhost:8000/api/comment)  
   Retrieve all comments.
-- **POST**: [/api/comment/[tweetid]/comment](http://localhost:8000/api/comment)  
+- **POST**: [/api/comment/[tweetid]/comment](http://localhost:8000/api/comment) ==========================================
   Create a new comment.
 - **DELETE**: [/api/comment/[commentId]](http://localhost:8000/api/comment/[commentId])  
   Delete a comment by its ID.

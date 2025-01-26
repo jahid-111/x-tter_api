@@ -74,7 +74,7 @@ async function handleUpdateTweet(req, res) {
     });
   }
 }
-// 🥰🥰🥰
+
 async function handleCreateNewTweet(req, res) {
   const incomingTweet = req.body;
 
@@ -111,8 +111,7 @@ async function handleCreateNewTweet(req, res) {
 }
 
 async function handleDeleteTweetById(req, res) {
-  const tweetId = req.params?.id;
-  const auth = req.user._id;
+  const { tweetId, userId } = req.body;
 
   try {
     const tweet = await TweetModel.findById(tweetId);
@@ -121,21 +120,17 @@ async function handleDeleteTweetById(req, res) {
       return res.status(404).json({ message: "Tweet not found" });
     }
 
-    if (auth.toString() !== tweet.author.toString()) {
+    if (userId.toString() !== tweet.author.toString()) {
       return res
         .status(401)
         .json({ message: "You are not authorized to delete this tweet" });
     }
 
-    // Delete the tweet
     const deletedTweet = await TweetModel.findByIdAndDelete(tweetId);
 
-    // Remove the tweet reference from the author's document
-    await UserModel.findByIdAndUpdate(auth, {
+    await UserModel.findByIdAndUpdate(userId, {
       $pull: { tweet: tweetId },
     });
-
-    // console.log("Deleted tweet:", deletedTweet);
 
     return res.status(200).json({
       message: "Tweet deleted successfully",
@@ -157,11 +152,8 @@ async function handleLikeTweetById(req, res) {
       return res.status(404).json({ message: "Tweet not found" });
     }
 
-    // console.log(tweet)
     // Check if the user has already liked the tweet
-    console.log("TEST 🥲🥲", tweet.likes);
     const isLiked = tweet.likes.includes(userId);
-    console.log(isLiked);
 
     if (isLiked) {
       // Remove the like (unlike)
@@ -173,13 +165,16 @@ async function handleLikeTweetById(req, res) {
       tweet.likes.push(userId);
     }
 
+    // Save the tweet after modification
     await tweet.save();
 
+    // Return the updated response
     return res.status(200).json({
-      message: isLiked ? "Unliked" : "Liked",
-      isLiked: isLiked,
+      message: isLiked ? "unLiked" : "Liked", // Flip the message depending on the action
+      isLiked: !isLiked, // Flip the state to reflect the new like status
       tweetId,
       userId,
+      likeCount: tweet.likes.length, // Send the updated like count
     });
   } catch (error) {
     console.error("Like/Unlike Error:", error);
@@ -190,8 +185,8 @@ async function handleLikeTweetById(req, res) {
   }
 }
 const handleRetweetPost = async (req, res) => {
-  const userId = req.user._id;
-  const tweetId = req.params.id;
+  const { userId, tweetId } = req.body.payload;
+
   // console.log(userId);
 
   try {
