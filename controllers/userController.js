@@ -120,6 +120,7 @@ async function handleDeleteUserById(req, res) {
 }
 
 const handleUserFollower = async (req, res) => {
+  // console.log(req);
   try {
     const myId = req.user._id;
     const userId = req.params.id;

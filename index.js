@@ -27,6 +27,7 @@ app.use(
   cors({
     origin: [
       "https://twitter-x-snowy.vercel.app",
+      "https://x-tweet-ten.vercel.app",
       "http://localhost:3000",
       "http://localhost:5173",
     ],
@@ -44,7 +45,7 @@ app.use(logReqRes("log.txt"));
 app.use("/api/verify", verify);
 app.use("/api/auth", authRouter);
 app.use("/api/user", restrictToLoggedUserOnly, userRouter); //70 passed ✔️✔️
-app.use("/api/tweet", tweetRouter); //
+app.use("/api/tweet", restrictToLoggedUserOnly, tweetRouter); //
 app.use("/api/comment", restrictToLoggedUserOnly, commentRouter);
 
 app.listen(port, () =>

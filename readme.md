@@ -116,7 +116,7 @@ Registers a user and returns user credentials.
 
 - **GET**: [/api/comment](http://localhost:8000/api/comment)  
   Retrieve all comments.
-- **POST**: [/api/comment/[tweetid]/comment](http://localhost:8000/api/comment) ==========================================
+- **POST**: [/api/comment/[tweetid]/comment](http://localhost:8000/api/comment)
   Create a new comment.
 - **DELETE**: [/api/comment/[commentId]](http://localhost:8000/api/comment/[commentId])  
   Delete a comment by its ID.
@@ -161,8 +161,8 @@ Registers a user and returns user credentials.
     "v": 0
   }
   ```
-- **PATCH**: [/api/user/[userid]](http://localhost:8000/api/user/[userid])  
-   Update a user's details.
+- **PATCH**: [/api/user/[userid]](http://localhost:8000/api/user/[userid]) ========================================
+  Update a user's details.
 
   ```json
   {
