@@ -1,4 +1,6 @@
+const TweetModel = require("../models/tweet_model");
 const UserModel = require("../models/user_model");
+const mongoose = require("mongoose");
 
 // --------------^^^^^^^^^^^^------------------------------- Modules
 
@@ -22,20 +24,39 @@ async function handleGetLoggedUser(req, res) {
 
 async function handleGetUserById(req, res) {
   try {
+    // console.log("Request URL:", req.url); // Log the full URL
+    // console.log("Request Params:", req.params); // Log all params
+    // console.log("Request Query:", req.query); // Log query parameters
+
     const userId = req.params?.id;
-    // console.log(req.params.id)
-    const user = await UserModel.findById(userId).select("-password -salt");
-    if (!user) {
-      return res.status(400).json({ message: "User not  Found" });
+    // console.log("User ID from params:", userId); // Debugging line
+
+    if (!userId || !mongoose.isValidObjectId(userId)) {
+      return res.status(400).json({ message: "Invalid User ID" });
     }
-    return res.status(200).json(user);
+
+    // Fetch the user by ID, excluding sensitive fields
+    const user = await UserModel.findById(userId).select("-password -salt");
+    // console.log("--------",user)
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch all tweets associated with the user
+    const tweets = await TweetModel.find({ _id: { $in: user.tweet } }).populate(
+      "author"
+    );
+
+    // console.log("--------",tweets[0]._id)
+    // Return the user and their tweets
+    return res.status(200).json({ tweets });
   } catch (error) {
+    console.error("Error fetching user and tweets:", error);
     return res.status(500).json({
       message: "An unexpected error occurred. Please try again later.",
     });
   }
 }
-
 async function handleUpdateUserById(req, res) {
   const userId = req.params?.id; // The ID of the user to update
   // console.log(req)
